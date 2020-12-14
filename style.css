@@ -94,6 +94,7 @@ form {
   color: rgb(236, 217, 38);
   min-height: 40px;
   overflow: hidden;
+  cursor: move;
 }
 
 .checked {
