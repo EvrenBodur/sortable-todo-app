@@ -68,8 +68,10 @@ form {
   border: none;
   cursor: pointer;
   margin-left: 5px;
-  font-size: 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
   color: tomato;
+  background-color: #fff6ff;
 }
 
 .list {
@@ -90,7 +92,7 @@ form {
   align-items: center;
   flex: 1;
   color: rgb(236, 217, 38);
-  height: 100%;
+  min-height: 40px;
   overflow: hidden;
 }
 
@@ -110,4 +112,12 @@ i {
 
 .delete-icon {
   color: red;
+}
+
+.active {
+  background-color: #cec0df7c;
+}
+
+.on-element {
+  background-color: yellowgreen;
 }

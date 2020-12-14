@@ -5,10 +5,17 @@ const input = document.querySelector(".input");
 class List {
   todoList = [];
   id = 0;
+  drag = this.drag.bind(this);
+  dragEnd = this.dragEnd.bind(this);
+  btnHandler = this.btnHandler.bind(this);
 
   create(todo) {
     const item = document.createElement("div");
     item.className = "item";
+    item.setAttribute("id", todo.id);
+    item.draggable = true;
+    item.ondrag = this.drag;
+    item.ondragend = this.dragEnd;
 
     const todoValue = document.createElement("div");
     todoValue.className = todo.checked ? "todo checked" : "todo";
@@ -36,12 +43,11 @@ class List {
     this.id++;
   }
 
-  get() {
+  render() {
     listElement.innerHTML = "";
     const getTodos = this.todoList.map((todo) => {
       this.create(todo);
     });
-
     return getTodos;
   }
 
@@ -57,25 +63,59 @@ class List {
       }
     });
     this.todoList = newTodoList;
-    this.get();
+    this.render();
   }
 
   delete(id) {
     const newTodoList = this.todoList.filter((todo) => todo.id !== id);
     this.todoList = newTodoList;
-    this.get();
+    this.render();
+  }
+
+  drag(e) {
+    this.current = this.todoList;
+    const selectedItem = e.target,
+      list = selectedItem.parentNode,
+      x = e.clientX,
+      y = e.clientY;
+
+    selectedItem.classList.add("active");
+    let swapItem =
+      document.elementFromPoint(x, y) === null
+        ? selectedItem
+        : document.elementFromPoint(x, y);
+
+    if (list === swapItem.parentNode) {
+      swapItem =
+        swapItem !== selectedItem.nextSibling ? swapItem : swapItem.nextSibling;
+      list.insertBefore(selectedItem, swapItem);
+    }
+  }
+
+  dragEnd(e) {
+    e.target.classList.remove("active");
+    const items = document.querySelectorAll(".item");
+    const currentList = this.todoList;
+    this.todoList = [];
+    items.forEach((element) => {
+      let orderItem = currentList.find((item) => item.id == element.id);
+      this.todoList.push(orderItem);
+    });
+    this.render();
+  }
+
+  btnHandler(e) {
+    e.preventDefault();
+    if (input.value === "") return;
+    this.add(input.value);
+    this.render();
+    input.value = "";
+  }
+
+  onload() {
+    submitBtn.addEventListener("click", this.btnHandler);
   }
 }
 
 const list = new List();
-
-const addTodos = (e) => {
-  e.preventDefault();
-
-  if (input.value === "") return;
-  list.add(input.value);
-  list.get();
-  input.value = "";
-};
-
-submitBtn.addEventListener("click", addTodos);
+list.onload();
