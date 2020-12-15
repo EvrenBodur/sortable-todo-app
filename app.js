@@ -17,6 +17,10 @@ class List {
     item.ondrag = this.drag;
     item.ondragend = this.dragEnd;
 
+    const dot = document.createElement("div");
+    dot.className = todo.checked ? "dot dot-checked" : "dot";
+    item.append(dot);
+
     const todoValue = document.createElement("div");
     todoValue.className = todo.checked ? "todo checked" : "todo";
     todoValue.innerText = todo.value;
@@ -73,7 +77,6 @@ class List {
   }
 
   drag(e) {
-    this.current = this.todoList;
     const selectedItem = e.target,
       list = selectedItem.parentNode,
       x = e.clientX,
